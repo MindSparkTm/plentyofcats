@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var cloudinary = require('cloudinary');
 var multer  = require('multer');
+var fs = require('fs');
+
 
 var upload = multer({ dest: './public/images/'});
 
@@ -34,6 +36,14 @@ router.post('/', upload.array('filesToUpload', 12),function(req, res) {
     console.log('files', req.files);
 
     var nofofiles= req.files;
+    var urls=[];
+
+    console.log('Body- ' + JSON.stringify(req.body));
+    var email = req.body.email;
+    var message = req.body.message;
+    var category = req.body.category;
+    var datetime = new Date();
+
 
     for(var i =0;i<nofofiles.length;i++){
         var filename = nofofiles[i].filename;
@@ -42,40 +52,24 @@ router.post('/', upload.array('filesToUpload', 12),function(req, res) {
         var correctpath = dest+filename;
         cloudinary.uploader.upload(correctpath, function(result) {
             console.log(result.secure_url);
+            urls.push(result.secure_url)
+
+            fs.unlink(correctpath, function(error) {
+                if (error) {
+                    throw error;
+                }
+                console.log('Deleted file');
+            });
+
+
+
         });
     }
 
-    console.log('Body- ' + JSON.stringify(req.body));
-    var email = req.body.email;
-    var message = req.body.message;
-    var category = req.body.category;
+
 
     console.log(email,message,category);
 
-  /* var email = req.body.email;
-   var message = req.body.message;
-   var catelgory = req.body.category;
-   var images = req.body.filesToUpload;
-cle
-  /*for(var i =0;i<images.length;i++) {
-      console.log("ima", images[i])
-       /*cloudinary.uploader.upload(images[i], function(result) {
-       console.log(result)
-   });*/
-
-     /* images[i].mv('/images/'+images[i], function(err) {
-          if (err)
-              return res.status(500).send(err);
-
-          res.send('File uploaded!');
-      });*/
- // }
-
-   //console.log(email,message,category,images);
-
-   /* cloudinary.uploader.upload("my_picture.jpg", function(result) {
-        console.log(result)
-    });*/
 
 
 });

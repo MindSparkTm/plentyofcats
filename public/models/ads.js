@@ -14,7 +14,9 @@ var Userad = MongoClient.model("Userad", {
     title: String,
     descrption: String,
     email:String,
-    category:String
+    category:String,
+    imageurl:String,
+    datecreated:String
 });
 
 
