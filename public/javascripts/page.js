@@ -9,6 +9,7 @@ while (list.hasChildNodes()) {
 //for every file...
 for (var x = 0; x < input.files.length; x++) {
     //add to list
+    console.log('Called me');
     var li = document.createElement('li');
     li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name;
     list.append(li);
